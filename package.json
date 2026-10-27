@@ -1,0 +1,14 @@
+{
+  "name": "snap-dust-camera",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local dust-disappearance camera effect for browser meetings",
+  "type": "module",
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "check": "node --check camera-bridge.js && node --check controls.js && node --check popup.js && node --check background.js && node --check tests/smoke.mjs",
+    "test": "node tests/smoke.mjs",
+    "test:setup": "playwright install chromium"
+  },
+  "devDependencies": {"@playwright/test": "1.64.1"}
+}

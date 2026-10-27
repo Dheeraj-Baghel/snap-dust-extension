@@ -1,0 +1,10 @@
+node_modules/
+.DS_Store
+*.log
+.env
+.env.*
+playwright-report/
+test-results/
+# Local packaged/extracted copies; source and preview images are tracked.
+artifacts/*.zip
+artifacts/snap-dust-extension/

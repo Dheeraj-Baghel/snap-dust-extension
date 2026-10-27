@@ -1,0 +1,15 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Outgoing camera test</title><style>body{font:16px system-ui;background:#edf0f5;padding:24px}video{width:480px;max-width:90vw;background:#222;border-radius:12px}button{padding:12px;font:inherit}pre{white-space:pre-wrap}</style></head><body><h1>Snap Dust — simulated meeting</h1><p>This displays the stream returned to a meeting and a separate WebRTC receiver.</p><button id="start">Start camera</button><button id="stop">Stop camera</button><p>Meeting stream</p><video id="local" autoplay muted playsinline></video><p>Remote WebRTC receiver</p><video id="remote" autoplay muted playsinline></video><pre id="status"></pre><script>
+let stream, sender, receiver;
+window.startCamera = async () => {
+  stream = await navigator.mediaDevices.getUserMedia({ video: { width:320,height:240 }, audio:true }); window.meetingStream = stream;
+  document.getElementById('local').srcObject=stream;
+  sender=new RTCPeerConnection();receiver=new RTCPeerConnection();window.sender=sender;window.receiver=receiver;
+  sender.onicecandidate=e=>{if(e.candidate)receiver.addIceCandidate(e.candidate).catch(()=>{});};receiver.onicecandidate=e=>{if(e.candidate)sender.addIceCandidate(e.candidate).catch(()=>{});};
+  receiver.ontrack=e=>{if(e.track.kind==='video')document.getElementById('remote').srcObject=new MediaStream([e.track]);};
+  stream.getTracks().forEach(t=>sender.addTrack(t,stream));
+  await sender.setLocalDescription(await sender.createOffer());await receiver.setRemoteDescription(sender.localDescription);await receiver.setLocalDescription(await receiver.createAnswer());await sender.setRemoteDescription(receiver.localDescription);
+  document.getElementById('status').textContent='Sending '+stream.getVideoTracks()[0].label;
+};
+window.stopCamera=()=>{stream?.getTracks().forEach(t=>t.stop());sender?.close();receiver?.close();};
+document.getElementById('start').onclick=()=>startCamera().catch(e=>document.getElementById('status').textContent=e.message);document.getElementById('stop').onclick=stopCamera;
+</script></body></html>

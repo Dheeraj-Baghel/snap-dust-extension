@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Snap Dust Camera",
+  "version": "0.1.0",
+  "description": "Local camera dust-disappearance effect for browser meetings.",
+  "minimum_chrome_version": "111",
+  "permissions": ["storage", "activeTab"],
+  "background": {"service_worker": "background.js"},
+  "content_scripts": [
+    {
+      "matches": ["https://*/*", "http://localhost/*"],
+      "js": ["camera-bridge.js"],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": true
+    },
+    {
+      "matches": ["https://*/*", "http://localhost/*"],
+      "js": ["controls.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "action": {"default_popup": "popup.html", "default_title": "Snap Dust Camera"}
+}
